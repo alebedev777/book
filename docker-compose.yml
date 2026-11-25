@@ -28,7 +28,8 @@ services:
       retries: 10
 
   minio:
-    image: minio/minio:latest
+    # Official minio/minio image was removed from public registries.
+    image: pgsty/silo:latest
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin

@@ -41,13 +41,16 @@ def generate_story(
     )
 
     client = get_openai_client()
-    response = client.chat.completions.create(
-        model=settings.openai_chat_model,
-        messages=messages,
-        response_format={"type": "json_object"},
-        temperature=0.9,
-        langfuse_prompt=langfuse_prompt,
-    )
+    request: dict = {
+        "model": settings.openai_chat_model,
+        "messages": messages,
+        "response_format": {"type": "json_object"},
+        "temperature": 0.9,
+    }
+    # langfuse.openai accepts this; the plain OpenAI client rejects unknown kwargs.
+    if langfuse_prompt is not None:
+        request["langfuse_prompt"] = langfuse_prompt
+    response = client.chat.completions.create(**request)
     raw = response.choices[0].message.content or "{}"
     data = json.loads(raw)
     book = StoryBook.model_validate(data)

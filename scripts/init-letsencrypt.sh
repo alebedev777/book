@@ -48,7 +48,8 @@ if [[ "$STAGING" == "1" ]]; then
   CERTBOT_ARGS+=(--staging)
 fi
 
-"${COMPOSE[@]}" run --rm certbot "${CERTBOT_ARGS[@]}"
+# entrypoint сервиса — цикл renew, он не выполняет аргументы run.
+"${COMPOSE[@]}" run --rm --entrypoint certbot certbot "${CERTBOT_ARGS[@]}"
 
 echo "→ certbot (автопродление)…"
 "${COMPOSE[@]}" up -d certbot
