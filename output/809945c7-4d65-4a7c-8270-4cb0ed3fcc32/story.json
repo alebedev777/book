@@ -1,0 +1,26 @@
+{
+  "title": "Дружок для Андрейки",
+  "hero_name": "Андрейка",
+  "pages": [
+    {
+      "page": 1,
+      "text": "Во дворе появился новый мальчик. Он стоял у песочницы и не играл. Андрейка нахмурился: «Чего он стоит на дороге?»",
+      "illustration_scene": "Child's-eye low angle: a boy stands still at the edge of a sandbox, his hands shoved deep in pockets, shoulders slightly hunched. In the foreground, a red bucket lies on its side. The sun casts long afternoon shadows across the sand. Another boy, Andreyka, watches from a few steps away, his weight on one foot, arms crossed — but his eyes are fixed on the newcomer's face, not the sand."
+    },
+    {
+      "page": 2,
+      "text": "Андрейка побежал кататься с горки. Новый мальчик так и стоял. Андрейка споткнулся и упал. Коленка заболела. На глазах выступили слёзы.",
+      "illustration_scene": "Over-the-shoulder shot from behind Andreyka: he's sitting on the ground, one hand clutching his scraped knee, the other wiping a tear. The slide is in the middle ground, empty. The new boy is a blurred silhouette in the deep background, still motionless near the sandbox. Warm afternoon light spills across the grass; a ladybug crawls on a dandelion in the foreground."
+    },
+    {
+      "page": 3,
+      "text": "Новый мальчик подошёл. Он протянул Андрейке платок. «У меня тоже болит, — тихо сказал он. — Я упал утром. И ни с кем не играл». Андрейка посмотрел на него и увидел: у мальчика на коленке такая же царапина.",
+      "illustration_scene": "Intimate close-up of hands and object: two small hands — one holding a crumpled white handkerchief, the other slowly reaching for it. In the background, soft-focused faces lean in, eyes meeting with surprise and recognition. The scene is framed by a patch of grass and a dandelion clock in the foreground, backlit by golden hour light. No one looks at the camera."
+    },
+    {
+      "page": 4,
+      "text": "Андрейка улыбнулся. «Давай вместе построим замок?» — спросил он. Новый мальчик кивнул. Теперь они сидели рядом в песочнице и строили самую высокую башню. А царапины совсем не болели.",
+      "illustration_scene": "Wide establishing shot of the sandbox: two boys sit side by side, knees in the sand, hands busy shaping a tower. One boy points at a small flag on top; the other laughs, leaning forward. A red bucket and blue shovel lie between them. The sun is lower, casting long warm shadows; a breeze ruffles the dandelion seeds drifting across the frame. The scene feels open and lived-in, with the slide and swings soft in the distance."
+    }
+  ]
+}

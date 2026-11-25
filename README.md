@@ -113,6 +113,10 @@ cd backend && uv run python scripts/push_prompts.py
 
 Пустые ключи — трассировка и Langfuse-промпты отключены, текст берётся из файлов.
 
+## Деплой на VPS
+
+Пошагово: [docs/DEPLOY-VPS.md](docs/DEPLOY-VPS.md) (Docker, nginx, Let's Encrypt). **Нужен домен** на IP сервера — Telegram требует HTTPS.
+
 ## Структура
 
 - `backend/` — API, worker, PDF, генерация

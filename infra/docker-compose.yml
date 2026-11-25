@@ -1,0 +1,6 @@
+# Используйте compose из корня репозитория:
+#   docker compose up --build
+#   docker compose --profile miniapp up --build
+
+include:
+  - path: ../docker-compose.yml

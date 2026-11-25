@@ -1,0 +1,27 @@
+[
+  {
+    "id": "disney",
+    "title_ru": "Дисней",
+    "style_prompt": "high-end 3D animated feature-film children's book illustration in the spirit of classic Disney and Pixar, cinematic warm lighting, soft global illumination, expressive oversized eyes, appealing rounded character design, squash-and-stretch charm, vibrant but harmonious palette, detailed storybook environment, subtle subsurface scattering, volumetric light, magical atmosphere, polished render, whimsical and heartwarming"
+  },
+  {
+    "id": "anime",
+    "title_ru": "Аниме",
+    "style_prompt": "Studio Ghibli and Hayao Miyazaki-inspired anime children's book illustration, hand-painted gouache backgrounds, lush nature, soft cel shading, clean expressive linework, large emotive eyes, watercolor clouds, nostalgic summer light, gentle wind, detailed foliage, whimsical everyday magic, cinematic composition, warm pastel highlights, painterly texture"
+  },
+  {
+    "id": "watercolor",
+    "title_ru": "Акварель",
+    "style_prompt": "Monet-inspired impressionist watercolor children's book illustration, luminous wet-on-wet washes, broken color, dappled sunlight, soft blooming edges, visible cold-press paper grain, airy composition, pastel and jewel accents, dreamy atmospheric depth, delicate brushwork, poetic and tender"
+  },
+  {
+    "id": "flat_graphic",
+    "title_ru": "Плоская графика",
+    "style_prompt": "modern flat vector children's book illustration, mid-century picture-book and Scandinavian design influence, bold simplified silhouettes, playful geometric shapes, limited harmonious palette, subtle textured grain overlay, clever negative space, friendly characters, crisp editorial composition, charming poster-like graphic quality"
+  },
+  {
+    "id": "storybook_ink",
+    "title_ru": "Книжная гравюра",
+    "style_prompt": "classic fairy-tale ink and watercolor illustration in the spirit of Arthur Rackham and vintage golden-age storybooks, fine cross-hatching, intricate linework, muted earthy palette with jewel accents, aged paper texture, romantic woodland atmosphere, dramatic chiaroscuro, ornamental details, hand-colored etching feel, mysterious and enchanting"
+  }
+]

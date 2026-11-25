@@ -1,0 +1,65 @@
+# Прод на VPS: docker compose -f docker-compose.yml -f docker-compose.prod.yml --profile miniapp up -d --build
+#
+# HTTPS: nginx + certbot (первый раз — scripts/init-letsencrypt.sh). См. docs/DEPLOY-VPS.md
+
+name: book
+
+services:
+  postgres:
+    ports: !reset []
+
+  redis:
+    ports: !reset []
+
+  minio:
+    ports: !reset []
+
+  api:
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    volumes: !reset []
+    environment:
+      S3_ENDPOINT: http://minio:9000
+
+  worker:
+    volumes: !reset []
+    environment:
+      S3_ENDPOINT: http://minio:9000
+
+  beat:
+    volumes: !reset []
+
+  bot:
+    volumes: !reset []
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DEPLOY_DOMAIN: ${DEPLOY_DOMAIN:?set DEPLOY_DOMAIN in .env}
+    volumes:
+      - ./infra/templates/edge.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - certbot_www:/var/www/certbot:ro
+      - certbot_conf:/etc/letsencrypt:ro
+    depends_on:
+      api:
+        condition: service_started
+      miniapp:
+        condition: service_started
+    profiles:
+      - miniapp
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - certbot_www:/var/www/certbot
+      - certbot_conf:/etc/letsencrypt
+    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew --quiet; sleep 12h & wait $${!}; done;'
+    profiles:
+      - miniapp
+
+volumes:
+  certbot_www:
+  certbot_conf:

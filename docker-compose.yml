@@ -1,0 +1,148 @@
+name: book
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: book
+      POSTGRES_PASSWORD: book
+      POSTGRES_DB: book
+    ports:
+      - "${BOOK_POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U book -d book"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "${BOOK_REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "${BOOK_MINIO_PORT:-9000}:9000"
+      - "${BOOK_MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - miniodata:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://book:book@postgres:5432/book
+      DATABASE_URL_SYNC: postgresql://book:book@postgres:5432/book
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      S3_ENDPOINT: http://minio:9000
+      S3_PUBLIC_URL: http://localhost:${BOOK_MINIO_PORT:-9000}/book-assets
+    ports:
+      - "${BOOK_API_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./shared:/app/shared
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_started
+
+  worker:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile
+    command: celery -A app.worker.celery_app:celery_app worker --loglevel=info
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://book:book@postgres:5432/book
+      DATABASE_URL_SYNC: postgresql://book:book@postgres:5432/book
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      S3_ENDPOINT: http://minio:9000
+      S3_PUBLIC_URL: http://localhost:${BOOK_MINIO_PORT:-9000}/book-assets
+    volumes:
+      - ./backend:/app/backend
+      - ./shared:/app/shared
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_started
+
+  beat:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile
+    command: celery -A app.worker.celery_app:celery_app beat --loglevel=info
+    env_file:
+      - .env
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      DATABASE_URL_SYNC: postgresql://book:book@postgres:5432/book
+      S3_ENDPOINT: http://minio:9000
+    volumes:
+      - ./backend:/app/backend
+      - ./shared:/app/shared
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  bot:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile
+    command: python /app/bot/main.py
+    env_file:
+      - .env
+    working_dir: /app
+    volumes:
+      - ./bot:/app/bot
+      - ./backend:/app/backend
+      - ./shared:/app/shared
+    depends_on:
+      api:
+        condition: service_started
+
+  miniapp:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.miniapp
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    ports:
+      - "${BOOK_MINIAPP_PORT:-5173}:80"
+    depends_on:
+      api:
+        condition: service_started
+    profiles:
+      - miniapp
+
+volumes:
+  pgdata:
+  miniodata:
